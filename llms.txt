@@ -9,6 +9,8 @@ Projects: https://shubham-sahu.me/projects/
 ## Official social profiles
 - GitHub: https://github.com/https-shubhamsahu
 - LinkedIn: https://www.linkedin.com/in/shubhamsahu9372/
+- X: https://x.com/isag0011
+- Instagram: https://www.instagram.com/https.shubham.sahu/
 
 ## Projects
 - [R3Bin](https://shubham-sahu.me/projects/r3bin/): An internship project connecting YOLOv8 waste detection, a touchscreen interface, and servo control through ROS 2. Stage: Internship prototype.
