@@ -35,6 +35,7 @@ Apps & deployed websites: https://shubham-sahu.me/apps/
 - DevDojo: https://devdojo.com/user/shubham-sahu
 - DEV: https://dev.to/isagi0011
 - Devpost: https://devpost.com/shubhamsahu9372
+- Product Hunt: https://www.producthunt.com/@https_shubhamsahu
 
 ## Projects
 - [R3Bin](https://shubham-sahu.me/projects/r3bin/): An internship project connecting YOLOv8 waste detection, a touchscreen interface, and servo control through ROS 2. Stage: Internship prototype.
