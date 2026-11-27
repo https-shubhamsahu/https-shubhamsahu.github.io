@@ -24,12 +24,19 @@ if (!selected.length) { console.log('No changed indexable pages; nothing submitt
 const payload = { host: new URL(origin).host, key, keyLocation: `${origin}/${keyFile}`, urlList: selected };
 if (args.includes('--dry-run')) { console.log(JSON.stringify({ dryRun: true, urlList: selected }, null, 2)); process.exit(0); }
 const hash = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
+// Cloudflare rewrites live HTML (email obfuscation, hidden links, the analytics beacon), so a byte match
+// never holds for pages. The content-hashed asset names it leaves untouched prove the same build is live.
+const assets = html => [...new Set(html.match(/\/assets\/[\w.-]+\.(?:js|css)/g) || [])].sort().join(' ');
 // Guard against notifying engines before this exact page content is actually live.
 for (const url of [...selected, payload.keyLocation]) {
   const response = await fetch(url, { signal: AbortSignal.timeout(30000), cache: 'no-store' });
   if (response.status !== 200) throw new Error(`Live page returned ${response.status}: ${url}`);
-  const localPath = url === payload.keyLocation ? keyFile : path.posix.join(new URL(url).pathname.slice(1), 'index.html');
-  if (hash(Buffer.from(await response.arrayBuffer())) !== hash(await fs.readFile(path.join(root, localPath)))) throw new Error(`Live content differs from deployment: ${url}`);
+  const isKey = url === payload.keyLocation;
+  const localPath = isKey ? keyFile : path.posix.join(new URL(url).pathname.slice(1), 'index.html');
+  const live = Buffer.from(await response.arrayBuffer());
+  const local = await fs.readFile(path.join(root, localPath));
+  const same = isKey ? hash(live) === hash(local) : assets(local.toString()) !== '' && assets(live.toString()) === assets(local.toString());
+  if (!same) throw new Error(`Live content differs from deployment: ${url}`);
 }
 const response = await fetch('https://api.indexnow.org/indexnow', {
   method: 'POST', headers: { 'Content-Type': 'application/json; charset=utf-8' },
